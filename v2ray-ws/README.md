@@ -5,10 +5,16 @@
 镜像的默认流程为
 
 1. 尝试开启bbr加速
-2. 尝试安装并配置v2ray
-3. 尝试安装并配置nginx
+2. 尝试安装并配置nginx
+3. 尝试安装并配置v2ray
 
 运行该镜像后，服务将监听容器的10086端口
+
+注意！你需要手动获取到v2ray配置文件中的client uuid
+
+可以通过以下命令获取第一个uuid
+
+`egrep /uuid:"[a-zA-Z0-9]+"/ /etc/v2ray/config.json`
 
 ## 用例
 

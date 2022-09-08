@@ -1,14 +1,17 @@
-# v2ray镜像，提供配置即可启动服务
-FROM v2fly/v2fly-core
+FROM node:alpine
 
-# 提供v2ray的默认配置
-COPY configs/v2ray.json /etc/v2ray/config.json
+LABEL MAINTAINER "ruienger@13643610935@163.com"
 
-# nginx镜像，如上
-FROM nginx:alpine
+WORKDIR /root
 
-# 提供nginx的默认配置
-COPY configs/nginx.conf /etc/nginx/nginx.conf
+EXPOSE 10086
 
-# 开启BBR加速
-CMD ['scripts/bbr.sh']
+COPY / /root/
+
+RUN set -ex \
+      && node /root/scripts/install.js \
+      && node /root/scripts/process.js
+
+ENTRYPOINT [ "node" ]
+
+CMD [ "/root/scripts/run.js" ]
