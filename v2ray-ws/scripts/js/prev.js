@@ -1,14 +1,14 @@
 #!/bin/node
 const { randomUUID } = require('crypto')
 const { readFile, writeFile } = require('fs')
-const { exec, nginxCfgPath, v2rayCfgPath, etcInfoPath, cwd } = require("./common");
+const { cwd } = require('process')
 
 // 处理配置文件，启用必要功能
 
 // alpine镜像不支持bbr加速，懒得查了
 // 处理v2ray配置文件
-
-const configPath = `${cwd}configs/v2ray.json`
+const dir = cwd()
+const configPath = `${dir}/configs/v2ray.json`
 const uuids = []
 
 readFile(configPath, (err, data) => {
@@ -26,14 +26,10 @@ readFile(configPath, (err, data) => {
     JSON.stringify(config),
     () => {}
   )
+  // 将随机生成的uuid存起来以便后续输出
   writeFile(
-    etcInfoPath,
-    JSON.stringify(uuids),
+    `${dir}/etcinfo`,
+    `v2ray client uuids: ${JSON.stringify(uuids)}`,
     () => {}
   )
 })
-
-// 移动配置文件位置
-exec(`mv /root/configs/nginx.conf ${nginxCfgPath}`)
-exec(`mv /root/configs/v2ray.json ${v2rayCfgPath}`)
-
