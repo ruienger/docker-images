@@ -1,17 +1,29 @@
-FROM node:alpine
+FROM node:alpine as prev
 
-LABEL MAINTAINER "ruienger@13643610935@163.com"
+WORKDIR /root
+
+COPY . .
+
+RUN set -ex \
+      && node ./scripts/js/prev.js
+
+FROM alpine
+
+LABEL MAINTAINER "ruienger"
 
 WORKDIR /root
 
 EXPOSE 10086
 
-COPY / /root/
+COPY --from=prev /root/configs/ ./configs
+COPY --from=prev /root/scripts/shell/run.sh .
+COPY --from=prev /root/etcinfo .
 
 RUN set -ex \
-      && node /root/scripts/install.js \
-      && node /root/scripts/process.js
+      && apk update \
+      && apk add v2ray nginx \
+      && mv ./configs/nginx.conf /etc/nginx/nginx.conf \
+      && mv ./configs/v2ray.json /etc/v2ray/config.json \
+      && rm -r configs
 
-ENTRYPOINT [ "node" ]
-
-CMD [ "/root/scripts/run.js" ]
+CMD ["./run.sh"]

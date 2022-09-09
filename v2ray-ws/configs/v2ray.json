@@ -1,6 +1,6 @@
 {
   "log": {
-    "loglevel": "warning"
+    "error": "/var/log/v2ray.error.log"
   },
   "routing": {
     "domainStrategy": "AsIs",
