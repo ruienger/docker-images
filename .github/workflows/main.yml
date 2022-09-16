@@ -57,7 +57,7 @@ jobs:
       - name: Get tag to build
         id: tag
         run: |
-          tag=`echo refs/tags/v1.0.0 | grep 'v[0-9.]*'`
+          tag=`echo ${{ github.event.ref }} | sed 'v[0-9.]*'`
           if [[ -z $tag ]]; then
             $tag='lastest'
           fi
