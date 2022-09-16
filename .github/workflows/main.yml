@@ -1,27 +1,48 @@
-# This is a basic workflow to help you get started with Actions
+####################### 用途 ######################
 
-name: CI
+# 主要负责使用指定的tag创建、推送镜像
+# docker的tag通常由git tag指定
+# 若在master上则为lastest
 
-# Controls when the workflow will run
+###################################################
+
+####################### 说明 ######################
+
+# https://docs.docker.com/ci-cd/github-actions/
+
+# 分支说明
+# master ---------- 最新的稳定的代码
+# dev ------------- 最新的经过测试的代码
+# bugfix-* -------- 用于修复bug的代码
+# feature-* ------- 用于开发新功能的代码
+# v* -------------- git tag
+# others ---------- 不予维护
+
+# 何时触发该工作流
+# 向repo推送tag时触发
+# 向master合并pull request时触发
+
+###################################################
+name: Push Docker Image
+
 on:
-  # Triggers the workflow on pull request events but only for the "master" branch or tagged branch
-  pull_request:
-    branches: [ "master" ]
+  push:
     tags: [ "v*" ]
 
-  # Allows you to run this workflow manually from the Actions tab
+  pull_request:
+    branches: [ "master" ]
+
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+  workflow_call:
+
+# 一个工作流的运行是由一个以上的工作按顺序或平行的执行而组成的
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # 将你的仓库检出到机器的$GITHUB_WORKSPACE目录中，以便下面继续运行
       - uses: actions/checkout@v3
 
       - name: Login to Docker Hub
@@ -36,21 +57,20 @@ jobs:
       - name: Get tag to build
         id: tag
         run: |
-          if [[ -z "${{ github.event.inputs.tag }}" ]]; then
-            echo "Use the tag: latest"
-            echo ::set-output name=tag::lastest
-          else
-            echo "Use tag: ${{ github.event.inputs.tag }}"
-            echo ::set-output name=tag::${{ github.event.inputs.tag }}
+          tag=`echo refs/tags/v1.0.0 | grep 'v[0-9.]*'`
+          if [[ -z $tag ]]; then
+            $tag='lastest'
           fi
+          echo "Use tag: $tag"
+          echo ::set-output name=tag::$tag
         
-      - name: Build and push
-        uses: docker/build-push-action@v2
-        with:
-          context: ./
-          file: ./Dockerfile
-          builder: ${{ steps.buildx.outputs.name }}
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:${{ steps.tag.outputs.tag }}
-          cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:buildcache
-          cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:buildcache,mode=max
+      # - name: Build and push
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./
+      #     file: ./Dockerfile
+      #     builder: ${{ steps.buildx.outputs.name }}
+      #     push: true
+      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:${{ steps.tag.outputs.tag }}
+      #     cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:buildcache
+      #     cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:buildcache,mode=max
