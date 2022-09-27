@@ -28,6 +28,7 @@ name: Push Docker Image
 on:
   push:
     tags: [ "v*" ]
+    branches: [ "t*" ]
 
   pull_request:
     branches: [ "master" ]
@@ -57,11 +58,11 @@ jobs:
       - name: Get tag to build
         id: tag
         run: |
-          tag=`echo ${{ github.event.ref }} | grep -Po 'v[0-9.]*'`
-          if [[ -z $tag ]]; then
-            $tag='lastest'
-          fi
-          echo "Use tag: $tag"
+          ref="${{ github.ref }}"
+          tag=`echo ${ref##*/}`
+          if [ $tag == "master" ]; then tag="latest"; fi
+          echo "current ref: $ref"
+          echo "using tag: $tag"
           echo ::set-output name=tag::$tag
         
       # - name: Build and push
