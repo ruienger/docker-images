@@ -59,10 +59,9 @@ jobs:
         run: |
           ref="${{ github.ref }}"
           tag=`echo ${ref##*/}`
-          if [ $tag == "master" ]; then tag="latest"; fi
+          if [ ${{ github.event }} == "pull_request" ]; then tag="latest"; fi
           echo "current ref: $ref"
           echo "using tag: $tag"
-          echo "repo info: ${{ github.repository }}:${{ steps.tag.outputs.tag }}"
           echo ::set-output name=tag::$tag
         
       - name: Build and push
