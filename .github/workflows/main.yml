@@ -59,7 +59,7 @@ jobs:
         run: |
           ref="${{ github.ref }}"
           tag=`echo ${ref##*/}`
-          if [ ${{ github.event }} == "pull_request" ]; then tag="latest"; fi
+          if [ ${{ github.event_name }} == "pull_request" ]; then tag="latest"; fi
           echo "current ref: $ref"
           echo "using tag: $tag"
           echo ::set-output name=tag::$tag
