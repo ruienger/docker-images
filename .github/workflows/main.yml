@@ -57,20 +57,18 @@ jobs:
       - name: Get tag to build
         id: tag
         run: |
-          tag=`echo ${{ github.event.ref }} | grep -Po 'v[0-9.]*'`
-          if [[ -z $tag ]]; then
-            $tag='lastest'
-          fi
-          echo "Use tag: $tag"
+          ref="${{ github.ref }}"
+          tag=`echo ${ref##*/}`
+          if [ $tag == "master" ]; then tag="latest"; fi
+          echo "current ref: $ref"
+          echo "using tag: $tag"
+          echo "repo info: ${{ github.repository }}:${{ steps.tag.outputs.tag }}"
           echo ::set-output name=tag::$tag
         
-      # - name: Build and push
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ./
-      #     file: ./Dockerfile
-      #     builder: ${{ steps.buildx.outputs.name }}
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:${{ steps.tag.outputs.tag }}
-      #     cache-from: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:buildcache
-      #     cache-to: type=registry,ref=${{ secrets.DOCKER_HUB_USERNAME }}/v2ray-ws:buildcache,mode=max
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ github.repository }}:${{ steps.tag.outputs.tag }}
