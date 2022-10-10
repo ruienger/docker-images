@@ -24,6 +24,7 @@ RUN set -ex \
       && apk add v2ray nginx \
       && mv ./configs/nginx.conf /etc/nginx/nginx.conf \
       && mv ./configs/v2ray.json /etc/v2ray/config.json \
-      && rm -r configs
+      && rm -r configs \
+      && chmod 771 ./run.sh
 
 CMD ["./run.sh"]
