@@ -21,9 +21,13 @@
       "settings": {
         "clients": [
           {
-            "id": "7b1a2634-f589-4aea-9858-c355e0b60842"
+            "id": "7b1a2634-f589-4aea-9858-c355e0b60842",
+            "alterId": 30
           }
-        ]
+        ],
+        "detour": {        
+          "to": "dynamicPort"   
+        }
       },
       "streamSettings": {
         "network": "ws",
@@ -41,6 +45,24 @@
     {
       "protocol": "blackhole",
       "tag": "block"
+    }
+  ],
+  "inboundDetour":[
+    {
+      "protocol": "vmess",
+      "port": "10000-30000",
+      "tag": "dynamicPort",       
+      "settings": {
+        "default": {
+          "level": 1,
+          "alterId": 30
+        }
+      },
+      "allocate": {
+        "strategy": "random",
+        "concurrency": 2,
+        "refresh": 60
+      }
     }
   ]
 }
