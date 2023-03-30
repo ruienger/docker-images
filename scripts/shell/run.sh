@@ -16,4 +16,4 @@ echo "nginx error logs path: ${nginx_log_path} " >> /root/etcinfo
 
 cat /root/etcinfo
 
-rm -r /root/run.sh && nginx -c ${nginx_cfg_path} && v2ray --config=${v2ray_cfg_path}
+nginx -c ${nginx_cfg_path} && v2ray --config=${v2ray_cfg_path}
