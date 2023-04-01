@@ -4,11 +4,13 @@
   },
   "routing": {
     "domainStrategy": "AsIs",
+    "domainMatcher": "mph",
     "rules": [
       {
         "type": "field",
         "ip": [
-          "geoip:private"
+          "geoip:private",
+          "geoip:cn"
         ],
         "outboundTag": "block"
       }
@@ -20,19 +22,18 @@
       "protocol": "vmess",
       "settings": {
         "clients": [
-          {
-            "id": "7b1a2634-f589-4aea-9858-c355e0b60842",
-            "alterId": 30
-          }
+            {
+              "id": "",
+              "alterId": 32,
+              "email": "ruienger9@gmail.com"
+            }
         ],
-        "detour": {        
-          "to": "dynamicPort"   
-        }
+        "disableInsecureEncryption": false
       },
       "streamSettings": {
         "network": "ws",
         "wsSettings": {
-          "path": "/ws"
+          "path": "/ruienger"
         }
       }
     }
@@ -45,24 +46,6 @@
     {
       "protocol": "blackhole",
       "tag": "block"
-    }
-  ],
-  "inboundDetour":[
-    {
-      "protocol": "vmess",
-      "port": "10000-30000",
-      "tag": "dynamicPort",       
-      "settings": {
-        "default": {
-          "level": 1,
-          "alterId": 30
-        }
-      },
-      "allocate": {
-        "strategy": "random",
-        "concurrency": 2,
-        "refresh": 60
-      }
     }
   ]
 }
