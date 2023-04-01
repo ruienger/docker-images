@@ -29,7 +29,7 @@ id：详见docker logs
 
 传输协议：ws
 
-websocket路径： /ws
+websocket路径： /ruienger
 
 # 客制化配置
 
