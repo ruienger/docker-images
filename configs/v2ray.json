@@ -22,11 +22,11 @@
       "protocol": "vmess",
       "settings": {
         "clients": [
-            {
-              "id": "",
-              "alterId": 32,
-              "email": "ruienger9@gmail.com"
-            }
+          {
+            "id": "",
+            "alterId": 32,
+            "email": "ruienger9@gmail.com"
+          }
         ],
         "disableInsecureEncryption": false
       },
