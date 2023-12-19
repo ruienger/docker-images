@@ -13,7 +13,7 @@
 
 `docker pull ruienger/v2ray-ws`
 
-`docker run -d --net=host ruienger/v2ray-ws # 留意容器id，下一步要用，你也可以使用 docker run -p 来指定端口`
+`docker run -d --net=host ruienger/v2ray-ws # 留意容器id，下一步要用，你也可以使用 docker run -p hostport:10086 来指定端口`
 
 `docker logs ${container_id} # 查看log信息，其中包括了v2ray client uuid和配置、日志保存位置`
 
